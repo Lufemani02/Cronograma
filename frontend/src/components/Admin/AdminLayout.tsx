@@ -1,4 +1,3 @@
-// frontend/src/components/Admin/AdminLayout.tsx
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 

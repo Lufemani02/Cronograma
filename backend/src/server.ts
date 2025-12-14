@@ -6,12 +6,12 @@ import helmet from 'helmet';
 import departamentoRoutes from './routes/departamentoRoutes';
 import adminRoutes from './routes/adminRoutes';
 
-
 // Rutas
 import authRoutes from './routes/authRoutes';
 import usuarioRoutes from './routes/usuarioRoutes';
 import cronogramaRoutes from './routes/cronogramaRoutes';
 import { authMiddleware } from './middleware/authMiddleware';
+import liderRoutes from './routes/liderRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -36,6 +36,7 @@ app.use('/api/departamentos', departamentoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/cronograma', cronogramaRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/lider', liderRoutes);
 
 app.listen(PORT, () => {
   console.log(`✅ Backend corriendo en http://localhost:${PORT}`);

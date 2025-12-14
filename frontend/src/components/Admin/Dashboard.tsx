@@ -7,6 +7,15 @@ export default function Dashboard() {
       <h1 className="text-2xl font-bold text-gray-800 mb-4">📊 Panel de Administrador</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button 
+          onClick={() => {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+          }}
+          className="text-sm text-gray-600 hover:text-gray-900"
+        >
+          Cerrar sesión
+        </button>
+        <button 
           onClick={() => navigate('/admin/departamentos/crear')}
           className="p-4 bg-blue-100 hover:bg-blue-200 rounded text-left"
         >

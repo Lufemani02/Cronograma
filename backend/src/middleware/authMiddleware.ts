@@ -9,12 +9,16 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   }
 
   const token = authHeader.split(' ')[1];
+  console.log('🔐 Token recibido:', token.substring(0, 10) + '...');
 
-  try {
+    try {
+    console.log('🔑 JWT_SECRET usado:', process.env.JWT_SECRET || '⚠️ undefined');
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    req.body.usuarioId = decoded.id;
+    console.log('✅ Token decodificado:', decoded);
+    (req as any).usuarioId = decoded.id; // ← usa req.usuarioId, no req.body
     next();
-  } catch (error) {
+  } catch (error: any) {
+    console.error('❌ JWT error:', error.message);
     res.status(401).json({ error: 'Token inválido o expirado' });
   }
 };

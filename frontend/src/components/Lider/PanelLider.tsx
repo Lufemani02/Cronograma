@@ -1,126 +1,185 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import './PanelLider.css';
+
+type Departamento = { id: number; nombre: string; logo_url: string }; // 👈 añadimos logo_url
+type Miembro = { id: number; nombre: string; correo: string };
+type Tarea = { id: number; nombre: string; departamento_id: number; departamento_nombre: string };
 
 export default function PanelLider() {
-  // Estado para departamentos
-  const [departamentos, setDepartamentos] = useState<any[]>([]);
+  const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
+  const [/*miembros*/, setMiembros] = useState<Miembro[]>([]);
+  const [/*tareas*/, setTareas] = useState<Tarea[]>([]);
   const [cargando, setCargando] = useState(true);
+  const navigate = useNavigate();
 
-  // Estado para crear miembro
-  const [nuevoMiembro, setNuevoMiembro] = useState({ nombre: '', correo: '', telefono: '' });
-  const [mensaje, setMensaje] = useState('');
-
-  // Cargar departamentos
   useEffect(() => {
-    api.get('/departamentos/mios')
-      .then(res => {
-        setDepartamentos(res.data);
+    const cargarDatos = async () => {
+      try {
+        console.log('📌 Token en localStorage:', localStorage.getItem('token'));
+        const res = await api.get('/lider/datos');
+        setDepartamentos(res.data.departamentos);
+        setMiembros(res.data.miembros);
+        setTareas(res.data.tareas);
+      } catch (err: any) {
+        console.error('Error:', err);
+        alert('No se pudieron cargar tus datos. ¿Sesión expirada?');
+        localStorage.removeItem('token');
+        navigate('/');
+      } finally {
         setCargando(false);
-      })
-      .catch(err => {
-        console.error(err);
-        alert('Error al cargar ministerios');
-        setCargando(false);
-      });
-  }, []);
+      }
+    };
 
-  // Crear miembro
-  const handleCrearMiembro = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setMensaje('');
+    cargarDatos();
+  }, [navigate]);
 
-    try {
-      const res = await api.post('/usuarios', nuevoMiembro);
-      setMensaje(`✅ Miembro creado: ${res.data.nombre} (ID: ${res.data.id})`);
-      setNuevoMiembro({ nombre: '', correo: '', telefono: '' });
-    } catch (err: any) {
-      const msg = err.response?.data?.error || 'Error al crear miembro';
-      setMensaje(`❌ ${msg}`);
-    }
-  };
+  // ✅ Obtiene el primer departamento y su logo_url
+  const deptPrincipal = departamentos[0];
+  const deptNombre = deptPrincipal?.nombre || 'Ministerio';
+  const imgUrl = deptPrincipal?.logo_url || '/departamentos/default.png'; // fallback
 
-  if (cargando) return <div className="p-8 text-center">Cargando...</div>;
+  if (cargando) {
+    return (
+      <div className="panel-lider-container">
+        <header className="panel-header">
+          <div className="dept-logo">
+            <div className="placeholder-logo"></div>
+          </div>
+          <h1 className="panel-title">CARGANDO...</h1>
+          <div className="logout-placeholder"></div>
+        </header>
+        <div className="p-8 text-center">Cargando tus ministerios...</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Panel de Líder</h1>
+    <div className="panel-lider-container">
+      {/* Header con imagen desde logo_url */}
+      <header className="panel-header">
+        <div className="dept-logo">
+          <img src={imgUrl} alt={deptNombre} className="dept-icon" />
+        </div>
+        <h1 className="panel-title">GESTIÓN DE CRONOGRAMAS</h1>
         <button 
           onClick={() => {
             localStorage.removeItem('token');
-            window.location.href = '/';
+            navigate('/');
           }}
-          className="text-sm text-gray-600 hover:text-gray-900"
+          className="logout-button"
         >
-          Cerrar sesión
+          CERRAR SESIÓN
         </button>
-      </div>
+      </header>
 
-      {/* Lista de ministerios */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-3">Tus ministerios</h2>
-        {departamentos.length === 0 ? (
-          <p>No tienes ministerios asignados.</p>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {departamentos.map(dep => (
-              <div key={dep.id} className="border border-gray-200 rounded-lg p-4">
-                <h3 className="font-bold text-blue-700">{dep.nombre}</h3>
-                <p className="text-sm text-gray-600">{dep.descripcion}</p>
+      {/* Contenido principal (igual que antes) */}
+      <main className="panel-content">
+        <div className="max-w-5xl mx-auto p-4 md:p-6">
+
+          {/* Ministerios 
+          <section className="panel-section">
+            <h2 className="section-title">Tus ministerios</h2>
+            {departamentos.length === 0 ? (
+              <p className="text-muted">No tienes ministerios asignados.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {departamentos.map(dep => (
+                  <div key={dep.id} className="dept-card">
+                    <h3 className="dept-card-title">{dep.nombre}</h3>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+          </section>
+*/}
+          {/* Miembros 
+          <section className="panel-section">
+            <h2 className="section-title">Miembros disponibles</h2>
+            {miembros.length === 0 ? (
+              <p className="text-muted">No hay miembros asignados.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {miembros.map(m => (
+                  <div key={m.id} className="member-card">
+                    <p className="member-name">{m.nombre}</p>
+                    <p className="member-email">{m.correo}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+*/}
+          {/* Tareas 
+          <section className="panel-section">
+            <h2 className="section-title">Tareas por ministerio</h2>
+            {tareas.length === 0 ? (
+              <p className="text-muted">No hay tareas definidas.</p>
+            ) : (
+              <div className="space-y-4">
+                {departamentos.map(dep => {
+                  const tareasDepto = tareas.filter(t => t.departamento_id === dep.id);
+                  if (tareasDepto.length === 0) return null;
+                  return (
+                    <div key={dep.id} className="task-dept-card">
+                      <h3 className="task-dept-title">{dep.nombre}</h3>
+                      <div className="task-tags">
+                        {tareasDepto.map(t => (
+                          <span key={t.id} className="task-tag">
+                            {t.nombre}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+*/}
+  {/* Botón Crear */}
+          <div className="contenedor-botones">
+            <div className="text-center mt-8">
+            <button
+              onClick={() => navigate('/panel-lider/asignar')}
+              className="btn-asignar"
+            >
+               Crear Cronogramas
+            </button>
           </div>
-        )}
-      </div>
-
-      {/* Formulario crear miembro */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-lg font-semibold mb-4">➕ Crear nuevo miembro</h2>
-        
-        {mensaje && (
-          <div className={`mb-4 p-3 rounded ${mensaje.startsWith('✅') ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-            {mensaje}
+ {/* Botón Editar 
+          <div className="text-center mt-8">
+            <button
+              onClick={() => navigate('')}
+              className="btn-editar"
+            >
+              Editar
+            </button>
           </div>
-        )}
-
-        <form onSubmit={handleCrearMiembro} className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium mb-1">Nombre completo</label>
-            <input
-              type="text"
-              value={nuevoMiembro.nombre}
-              onChange={e => setNuevoMiembro({...nuevoMiembro, nombre: e.target.value})}
-              className="w-full p-2 border rounded"
-              required
-            />
+          */}
+  {/* Botón Eliminar 
+          <div className="text-center mt-8">
+            <button
+              onClick={() => navigate('')}
+              className="btn-eliminar"
+            >
+              Eliminar
+            </button>
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Correo</label>
-            <input
-              type="email"
-              value={nuevoMiembro.correo}
-              onChange={e => setNuevoMiembro({...nuevoMiembro, correo: e.target.value})}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Teléfono (opcional)</label>
-            <input
-              type="tel"
-              value={nuevoMiembro.telefono}
-              onChange={e => setNuevoMiembro({...nuevoMiembro, telefono: e.target.value})}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          */}
+  {/* Botón cronograma */}
+          <div className="text-center mt-8">
+          <button 
+            onClick={() => navigate('/panel-lider/cronograma')}
+            className="btn-cronograma"
           >
-            Crear miembro
+            Ver cronogramas
           </button>
-        </form>
-      </div>
+          </div>
+        </div>
+        </div>
+      </main>
     </div>
   );
 }

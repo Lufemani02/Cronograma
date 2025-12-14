@@ -10,7 +10,7 @@ type Miembro = { id: number; nombre: string };
 type Tarea = { id: number; nombre: string };
 
 export default function AsignarCronograma() {
-  const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
+  const [/*departamentos*/, setDepartamentos] = useState<Departamento[]>([]);
   const [miembros, setMiembros] = useState<Miembro[]>([]);
   const [tareas, setTareas] = useState<Tarea[]>([]);
   const [formData, setFormData] = useState({
@@ -90,8 +90,7 @@ export default function AsignarCronograma() {
   };
 
   // ✅ Obtener logo del primer departamento (fallback si no hay logo_url)
-  const deptPrincipal = departamentos[0];
-  const imgUrl = deptPrincipal?.logo_url || '/departamentos/default.png';
+  const imgUrl = '/departamentos/logo.jpg';
 
   return (
     <div className="asignar-cronograma-container">
@@ -121,7 +120,7 @@ export default function AsignarCronograma() {
             onClick={() => navigate('/panel-lider')}
             className="back-button"
           >
-            ← Volver al panel
+          Volver al panel
           </button>
 
           {/* Mensajes */}

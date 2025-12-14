@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import './Dashboard.css';
 
 export default function AsignarMiembro() {
   const [miembros, setMiembros] = useState<any[]>([]);
@@ -50,15 +51,31 @@ export default function AsignarMiembro() {
   };
 
   return (
+    <div className="dashboard-container">
+      <header className="panel-header">
+        <div className="dept-logo">
+          <img src="/iconos/AdminProfile.png" alt="Admin" className="dept-icon" />
+        </div>
+        <h1 className="panel-title">GESTIÓN DE USUARIOS</h1>
+        <button 
+          onClick={() => {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+          }}
+          className="logout-button"
+        >
+          CERRAR SESIÓN
+        </button>
+      </header>
     <div className="max-w-2xl mx-auto p-6">
       <button 
-        onClick={() => navigate('/admin')}
+        onClick={() => navigate('/admin/layout')}
         className="mb-4 text-blue-600 hover:underline"
       >
-        ← Volver al panel
+      Volver al panel
       </button>
 
-      <h2 className="text-2xl font-bold mb-4">🔀 Asignar miembro a departamento</h2>
+      <h2 className="text-2xl font-bold mb-4">Asignar miembro a departamento</h2>
 
       {exito && <div className="mb-4 p-3 bg-green-100 text-green-800 rounded">{exito}</div>}
       {error && <div className="mb-4 p-3 bg-red-100 text-red-800 rounded">{error}</div>}
@@ -102,6 +119,7 @@ export default function AsignarMiembro() {
           {cargando ? 'Asignando...' : 'Asignar'}
         </button>
       </form>
+    </div>
     </div>
   );
 }

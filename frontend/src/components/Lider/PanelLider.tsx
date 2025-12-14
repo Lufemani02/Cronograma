@@ -36,31 +36,14 @@ export default function PanelLider() {
   }, [navigate]);
 
   // ✅ Obtiene el primer departamento y su logo_url
-  const deptPrincipal = departamentos[0];
-  const deptNombre = deptPrincipal?.nombre || 'Ministerio';
-  const imgUrl = deptPrincipal?.logo_url || '/departamentos/default.png'; // fallback
-
-  if (cargando) {
-    return (
-      <div className="panel-lider-container">
-        <header className="panel-header">
-          <div className="dept-logo">
-            <div className="placeholder-logo"></div>
-          </div>
-          <h1 className="panel-title">CARGANDO...</h1>
-          <div className="logout-placeholder"></div>
-        </header>
-        <div className="p-8 text-center">Cargando tus ministerios...</div>
-      </div>
-    );
-  }
+ const imgUrl = '/departamentos/logo.jpg'; 
 
   return (
     <div className="panel-lider-container">
       {/* Header con imagen desde logo_url */}
       <header className="panel-header">
         <div className="dept-logo">
-          <img src={imgUrl} alt={deptNombre} className="dept-icon" />
+          <img src={imgUrl} alt="Logo" className="dept-icon" />
         </div>
         <h1 className="panel-title">GESTIÓN DE CRONOGRAMAS</h1>
         <button 

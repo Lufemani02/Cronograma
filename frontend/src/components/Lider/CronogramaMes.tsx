@@ -1,5 +1,3 @@
-// src/pages/CronogramaMes.tsx
-
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
@@ -11,26 +9,6 @@ type Asignacion = {
   miembro: string;
   tarea: string;
   ministerio: string;
-};
-
-// Colores por ministerio (ajusta según tus necesidades)
-const ministerioToColor: Record<string, string> = {
-  'Música': '#FFD700',        // Dorado
-  'Ujieres': '#FF7F00',       // Naranja
-  'Iglesia Infantil': '#8B0000', // Granate
-  'Comunicaciones': '#0096FF',   // Azul brillante
-  'default': '#64748b',       // Gris neutro
-};
-
-// Normalización para coincidir con claves
-const getMinisterioColor = (nombre: string): string => {
-  const normalized = nombre.trim().toLowerCase();
-  for (const [key, color] of Object.entries(ministerioToColor)) {
-    if (key.toLowerCase().includes(normalized) || normalized.includes(key.toLowerCase())) {
-      return color;
-    }
-  }
-  return ministerioToColor['default'];
 };
 
 export default function CronogramaMes() {
@@ -75,13 +53,11 @@ export default function CronogramaMes() {
     });
   };
 
-  // ✅ Obtener logo del dept (mismo que PanelLider)
-  // Si no tienes acceso aquí, puedes pasar por contexto o usar un fallback
-  const imgUrl = '/departamentos/default.png'; // ← ajusta si tienes dept en localStorage
+  // Obtener logo del dept (mismo que PanelLider)
+  const imgUrl = '/departamentos/logo.jpg'; 
 
   return (
     <div className="cronograma-container">
-      {/* Header igual que PanelLider */}
       <header className="panel-header">
         <div className="dept-logo">
           <img src={imgUrl} alt="Logo" className="dept-icon" />
@@ -103,19 +79,19 @@ export default function CronogramaMes() {
 
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gray-800">
-              🗓️ Cronograma {new Date(año, mes-1).toLocaleString('es', { month: 'long', year: 'numeric' })}
+              🗓️ {new Date(año, mes-1).toLocaleString('es', { month: 'long', year: 'numeric' })}
             </h2>
             <button 
               onClick={() => navigate('/panel-lider')}
               className="back-button"
             >
-              ← Volver al panel
+            Volver al panel
             </button>
           </div>
 
           {/* Filtros */}
           <div className="filters-card mb-6">
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-4">
               <select 
                 value={mes} 
                 onChange={e => setMes(Number(e.target.value))}
@@ -136,20 +112,21 @@ export default function CronogramaMes() {
                 min="2020"
                 max="2030"
               />
-
-              <button 
-                onClick={cargarCronograma}
-                disabled={cargando}
-                className="btn-load"
-              >
-                {cargando ? 'Cargando...' : 'Cargar cronograma'}
-              </button>
+              {/* Botón Exportar */}
+                {asignaciones.length > 0 && (
+                    <button
+                      onClick={exportarJPG}
+                      className="btn-export"
+                    >
+                      📤 Exportar cronograma a JPG
+                    </button>
+                )}
             </div>
           </div>
 
           {/* Tabla */}
           <div ref={exportRef} className="cronograma-export bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b">
+            <div className="p-4 bg-gray-60 border-b">
               <h3 className="text-lg font-bold text-center text-gray-800">
                 Cronograma de Servicio — {new Date(año, mes-1).toLocaleString('es', { month: 'long', year: 'numeric' })}
               </h3>
@@ -172,32 +149,22 @@ export default function CronogramaMes() {
                 <table className="w-full">
                   <thead>
                     <tr className="bg-gray-100 text-gray-700">
+                      <th className="py-3 px-4 text-left font-semibold">Nombre</th>
+                      <th className="py-3 px-4 text-left font-semibold">Servicio</th>
                       <th className="py-3 px-4 text-left font-semibold">Fecha</th>
-                      <th className="py-3 px-4 text-left font-semibold">Miembro</th>
-                      <th className="py-3 px-4 text-left font-semibold">Tarea</th>
-                      <th className="py-3 px-4 text-left font-semibold">Ministerio</th>
                     </tr>
                   </thead>
                   <tbody>
                     {asignaciones.map((a, i) => {
-                      const color = getMinisterioColor(a.ministerio);
                       return (
                         <tr 
                           key={i} 
                           className="border-b hover:bg-gray-50 transition-colors"
                         >
-                          <td className="py-3 px-4 font-medium text-gray-800">
-                            {new Date(a.fecha).toLocaleDateString('es')}
-                          </td>
                           <td className="py-3 px-4 text-gray-700">{a.miembro}</td>
                           <td className="py-3 px-4 text-gray-700">{a.tarea}</td>
-                          <td className="py-3 px-4">
-                            <span 
-                              className="inline-block px-3 py-1 rounded-full text-sm font-medium text-white"
-                              style={{ backgroundColor: color }}
-                            >
-                              {a.ministerio}
-                            </span>
+                          <td className="py-3 px-4 font-medium text-gray-800">
+                            {new Date(a.fecha).toLocaleDateString('es')}
                           </td>
                         </tr>
                       );
@@ -207,18 +174,6 @@ export default function CronogramaMes() {
               </div>
             )}
           </div>
-
-          {/* Botón Exportar */}
-          {asignaciones.length > 0 && (
-            <div className="mt-8 text-center">
-              <button
-                onClick={exportarJPG}
-                className="btn-export"
-              >
-                📤 Exportar cronograma a JPG
-              </button>
-            </div>
-          )}
         </div>
       </main>
     </div>

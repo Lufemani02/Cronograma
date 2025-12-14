@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './AuthLayout.css';
 
 export default function LoginAdmin() {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    // 👇 Log para verificar envío
     console.log('📌 Enviando al backend:', { correo, contraseña, rol: 'admin' });
 
     try {
@@ -23,7 +24,7 @@ export default function LoginAdmin() {
         body: JSON.stringify({
           correo,
           contraseña,
-          rol: 'admin'  // ← único cambio vs LoginLider
+          rol: 'admin'  // ← clave: rol 'admin'
         }),
       });
 
@@ -36,8 +37,9 @@ export default function LoginAdmin() {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
+      await new Promise(resolve => setTimeout(resolve, 10));
 
-      navigate('/admin');
+      navigate('/admin'); // ← ajusta si tu ruta es otra
 
     } catch (err: any) {
       setError(err.message);
@@ -46,50 +48,82 @@ export default function LoginAdmin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow w-96">
-        <h2 className="text-xl font-bold mb-4 text-blue-700">🔐 Iniciar sesión como Administrador</h2>
+    <div className="login-background">
+      <div className="login-card">
+        <h2 className="login-title">INICIAR SESIÓN</h2>
 
-        {error && <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">{error}</div>}
-
-        <div className="mb-3">
-          <label className="block text-sm mb-1">Correo</label>
-          <input
-            type="email"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
+        {/* Avatar de ADMIN (usa un ícono diferente, ej: corona o llave) */}
+        <div className="avatar-container">
+          <img
+            src="/iconos/AdminProfile.png" // 👈 nueva imagen
+            alt="Administrador"
+            className="avatar"
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm mb-1">Contraseña</label>
-          <input
-            type="password"
-            value={contraseña}
-            onChange={(e) => setContraseña(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Ej: lider123"
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="login-form">
+          {error && <div className="error-message">{error}</div>}
 
-        <button
-          type="submit"
-          className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700"
-        >
-          Entrar como Admin
-        </button>
+          {/* Campo Email */}
+          <div className="input-group">
+            <span className="icon">
+              <img src="/iconos/email.png" alt="Correo" className="icon-img" />
+            </span>
+            <input
+              type="email"
+              placeholder="Ingrese su correo electrónico"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
+              required
+              className="input-field"
+            />
+          </div>
 
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="mt-3 text-sm text-gray-600 hover:underline"
-        >
-          ← Cambiar rol
-        </button>
-      </form>
+          {/* Campo Contraseña */}
+          <div className="input-group">
+            <span className="icon">
+              <img src="/iconos/lock.png" alt="Contraseña" className="icon-img" />
+            </span>
+            <input
+              type="password"
+              placeholder="Ingrese su contraseña"
+              value={contraseña}
+              onChange={(e) => setContraseña(e.target.value)}
+              required
+              className="input-field"
+            />
+          </div>
+
+          {/* Recordar datos + Recuperar contraseña */}
+          <div className="options-row">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+              />
+              Recordar datos
+            </label>
+            <a href="#" className="forgot-password">
+              Recuperar contraseña
+            </a>
+          </div>
+
+          {/* Botón Iniciar */}
+          <button type="submit" className="login-button">
+            Entrar
+          </button>
+
+          {/* Cambiar rol */}
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="change-role-button"
+          >
+            ← Cambiar rol
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

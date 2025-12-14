@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import PanelLider from './components/Lider/PanelLider';
 import LoginLider from './components/Auth/LoginLider';
 import LoginAdmin from './components/Auth/LoginAdmin';
-import AdminLayout from './components/Admin/AdminLayout';
 import Dashboard from './components/Admin/Dashboard';
 import CrearDepartamento from './components/Admin/CrearDepartamento';
 import CrearLider from './components/Admin/CrearLider';
@@ -12,6 +11,7 @@ import CrearTarea from './components/Admin/CrearTarea';
 import SelectorRol from './components/Auth/SelectorRol';
 import AsignarCronograma from './components/Lider/AsignarCronograma';
 import CronogramaMes from './components/Lider/CronogramaMes';
+import CrearLayout from './components/Admin/CrearLayout';
 
 
 export default function App() {
@@ -30,7 +30,8 @@ export default function App() {
         <Route path="/panel-lider/asignar" element={<AsignarCronograma />} />
         <Route path="/panel-lider/cronograma" element={<CronogramaMes />} />
         <Route path="/admin/tareas/crear" element={<CrearTarea />} />
-        <Route path="/admin" element={<AdminLayout><Dashboard /></AdminLayout>} />
+        <Route path="/admin" element={<Dashboard/>} />
+        <Route path="/admin/layout" element={<CrearLayout />} />
       </Routes>
     </div>
   );

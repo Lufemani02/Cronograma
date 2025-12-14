@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginLider.css';
+import './AuthLayout.css';
 
 export default function LoginLider() {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [error, setError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -97,7 +98,7 @@ export default function LoginLider() {
             />
           </div>
 
-          {/* Recordar datos + Recuperar contraseña 
+          {/* Recordar datos + Recuperar contraseña */}
           <div className="options-row">
             <label className="checkbox-label">
               <input
@@ -111,10 +112,17 @@ export default function LoginLider() {
               Recuperar contraseña
             </a>
           </div>
-*/}
+
           {/* Botón Iniciar */}
           <button type="submit" className="login-button">
             Entrar
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="change-role-button"
+          >
+            ← Cambiar rol
           </button>
         </form>
       </div>

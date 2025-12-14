@@ -1,2 +1,42 @@
-node_modules 
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment variables
 .env
+.env.local
+.env.*.local
+
+# Build files
+/frontend/dist
+/frontend/.vite
+/frontend/.react
+/backend/dist
+/backend/build
+
+# Local config files
+*.local
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Coverage
+coverage/
+
+# Dependency directories
+jspm_packages/
+bower_components/
+
+# Misc
+.DS_Store
+*.swp
+.*.swp
+.*.swo

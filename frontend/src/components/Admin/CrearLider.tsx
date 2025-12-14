@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import './Dashboard.css';
 
 export default function CrearLider() {
   const [nombre, setNombre] = useState('');
@@ -41,7 +42,7 @@ export default function CrearLider() {
       const res = await api.post('/admin/lideres', {
         nombre: nombre.trim(),
         correo: correo.trim(),
-        contraseña: contraseña.trim(), // ← tú la defines
+        contraseña: contraseña.trim(),
         departamento_ids: departamentosSeleccionados.map(id => Number(id))
       });
 
@@ -65,15 +66,31 @@ export default function CrearLider() {
   };
 
   return (
+    <div className="dashboard-container">
+      <header className="panel-header">
+        <div className="dept-logo">
+          <img src="/iconos/AdminProfile.png" alt="Admin" className="dept-icon" />
+        </div>
+        <h1 className="panel-title">GESTIÓN DE USUARIOS</h1>
+        <button 
+          onClick={() => {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+          }}
+          className="logout-button"
+        >
+          CERRAR SESIÓN
+        </button>
+      </header>
     <div className="max-w-2xl mx-auto p-6">
       <button 
-        onClick={() => navigate('/admin')}
+        onClick={() => navigate('/admin/layout')}
         className="mb-4 text-blue-600 hover:underline"
       >
-        ← Volver al panel
+        Volver al panel
       </button>
 
-      <h2 className="text-2xl font-bold mb-4">👑 Crear nuevo líder</h2>
+      <h2 className="text-2xl font-bold mb-4">Crear nuevo líder</h2>
 
       {exito && (
         <div className="mb-4 p-3 bg-green-100 text-green-800 rounded">
@@ -93,9 +110,8 @@ export default function CrearLider() {
             required
           />
         </div>
-
         <div>
-          <label className="block text-sm font-medium mb-1">Correo institucional *</label>
+          <label className="block text-sm font-medium mb-1">Correo *</label>
           <input
             type="email"
             value={correo}
@@ -112,19 +128,18 @@ export default function CrearLider() {
             value={contraseña}
             onChange={e => setContraseña(e.target.value)}
             className="w-full p-2 border rounded"
-            placeholder="Ej: lider123"
+            placeholder="Ej: contraseña123"
             required
             minLength={6}
           />
           <p className="text-xs text-gray-500 mt-1">
-            Define tú la contraseña (mínimo 6 caracteres)
+            Definir contraseña (mínimo 6 caracteres)
           </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Ministerios a liderar *</label>
+          <label className="block text-sm font-medium mb-1">Asignar departamento's *</label>
           <select
-            multiple
             value={departamentosSeleccionados}
             onChange={e => {
               const selected = Array.from(e.target.selectedOptions, opt => opt.value);
@@ -134,17 +149,13 @@ export default function CrearLider() {
             required
           >
             <option value="" disabled>
-              Selecciona uno o más ministerios
+              Seleccionar departamento
             </option>
             {departamentos.map(d => (
               <option key={d.id} value={d.id}>{d.nombre}</option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">
-            Mantén Ctrl (Windows) o Cmd (Mac) para seleccionar varios
-          </p>
         </div>
-
         <button
           type="submit"
           disabled={cargando}
@@ -155,6 +166,7 @@ export default function CrearLider() {
           {cargando ? 'Creando...' : 'Crear líder'}
         </button>
       </form>
+    </div>
     </div>
   );
 }

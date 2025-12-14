@@ -8,10 +8,10 @@ type Miembro = { id: number; nombre: string; correo: string };
 type Tarea = { id: number; nombre: string; departamento_id: number; departamento_nombre: string };
 
 export default function PanelLider() {
-  const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
+  const [/*departamentos*/, setDepartamentos] = useState<Departamento[]>([]);
   const [/*miembros*/, setMiembros] = useState<Miembro[]>([]);
   const [/*tareas*/, setTareas] = useState<Tarea[]>([]);
-  const [cargando, setCargando] = useState(true);
+  const [/*cargando*/, setCargando] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {

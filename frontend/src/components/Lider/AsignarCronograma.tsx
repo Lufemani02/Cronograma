@@ -33,7 +33,7 @@ export default function AsignarCronograma() {
           setFormData(prev => ({ ...prev, departamento_id: String(res.data.departamentos[0].id) }));
         }
       })
-      .catch(err => setError('Error al cargar ministerios'));
+      //.catch(err => setError('Error al cargar ministerios'));
   }, []);
 
   // Cuando cambia el departamento, cargar miembros y tareas

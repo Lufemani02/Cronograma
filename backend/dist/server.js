@@ -36,6 +36,13 @@ app.use('/api/usuarios', usuarioRoutes_1.default);
 app.use('/api/cronograma', cronogramaRoutes_1.default);
 app.use('/api/admin', adminRoutes_1.default);
 app.use('/api/lider', liderRoutes_1.default);
+// Ruta de salud para verificar que el backend está vivo
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        time: new Date().toISOString()
+    });
+});
 // Ruta raíz para Railway
 app.get('/', (req, res) => {
     res.status(200).json({

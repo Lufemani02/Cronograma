@@ -36,6 +36,13 @@ app.use('/api/usuarios', usuarioRoutes_1.default);
 app.use('/api/cronograma', cronogramaRoutes_1.default);
 app.use('/api/admin', adminRoutes_1.default);
 app.use('/api/lider', liderRoutes_1.default);
+// Ruta raíz para Railway
+app.get('/', (req, res) => {
+    res.status(200).json({
+        message: 'Backend IPUC ✅',
+        time: new Date().toISOString()
+    });
+});
 app.listen(PORT, () => {
     console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
 });

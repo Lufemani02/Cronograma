@@ -11,11 +11,8 @@ yarn-error.log*
 .env.*.local
 
 # Build files
-/frontend/dist
 /frontend/.vite
 /frontend/.react
-/backend/dist
-/backend/build
 
 # Local config files
 *.local

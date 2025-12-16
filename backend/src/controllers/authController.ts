@@ -28,7 +28,7 @@ export const login = async (req: Request, res: Response) => {
 
     // ✅ Solo Ana (id=1) puede ser admin
     if (rol === 'admin' && user.id !== 1) {
-      return res.status(403).json({ error: 'Solo Ana puede ser admin' });
+      return res.status(403).json({ error: 'Solo Luis puede ser admin' });
     }
 
     // ✅ Todos usan "lider123" → validación simple

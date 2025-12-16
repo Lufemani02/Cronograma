@@ -21,10 +21,6 @@ const PORT = process.env.PORT || 3001;
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// Health check
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', time: new Date().toISOString() });
-});
 // Ruta protegida: solo líderes
 app.get('/api/lider/perfil', authMiddleware_1.authMiddleware, (req, res) => {
     res.json({ mensaje: '¡Acceso concedido!', usuarioId: req.body.usuarioId });

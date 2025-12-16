@@ -5,7 +5,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "deploy": "npm run build && cp -r .env.example .env && echo '✅ Listo para deploy'"
+
   },
   "keywords": [],
   "author": "",

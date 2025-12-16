@@ -38,6 +38,22 @@ app.use('/api/cronograma', cronogramaRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/lider', liderRoutes);
 
+// Ruta de salud para verificar que el backend está vivo
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'ok', 
+    time: new Date().toISOString() 
+  });
+});
+
+// Ruta raíz para Railway
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    message: 'Backend IPUC ✅', 
+    time: new Date().toISOString() 
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
 });

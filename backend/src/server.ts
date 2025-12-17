@@ -63,7 +63,15 @@ try {
 } catch (err: any) {
   console.error('❌ Error al cargar liderRoutes:', err?.message || err);
 }
-
+// Ruta protegida para validar sesión de líder
+app.get('/api/lider/perfil', (req, res) => {
+  // Por ahora, solo verifica que el token exista (sin authMiddleware)
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'No autorizado' });
+  }
+    res.json({ mensaje: 'Sesión válida', rol: 'lider' });
+});
 // Rutas de prueba
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 

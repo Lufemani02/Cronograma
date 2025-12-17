@@ -23,14 +23,24 @@ export const crearDepartamento = async (req: Request, res: Response) => {
     );
 
     res.status(201).json({ id: result.insertId, nombre, descripcion });
-  } catch (error: any) {
-    if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(409).json({ error: 'Departamento ya existe' });
-    }
-    res.status(500).json({ error: 'Error al crear departamento' });
+ } catch (error: any) {
+  console.error('💥 crearDepartamento FALLO:', {
+    message: error.message,
+    code: error.code,
+    sql: error.sql,
+    stack: error.stack?.split('\n').slice(0, 3).join('\n')
+  });
+  
+  if (error.code === 'ER_DUP_ENTRY') {
+    return res.status(409).json({ error: 'Departamento ya existe' });
   }
+  
+  res.status(500).json({
+    error: 'Error interno',
+    detail: error.message // ← para verlo en el frontend
+  });
+}
 };
-
 // --- MIEMBROS ---
 export const crearMiembro = async (req: Request, res: Response) => {
   try {

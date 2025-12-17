@@ -19,7 +19,10 @@ const liderRoutes_1 = __importDefault(require("./routes/liderRoutes"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3001;
 app.use((0, helmet_1.default)());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: ['https://cronogramaipuc.vercel.app'],
+    credentials: true
+}));
 app.use(express_1.default.json());
 // Ruta protegida: solo líderes
 app.get('/api/lider/perfil', authMiddleware_1.authMiddleware, (req, res) => {

@@ -18,7 +18,7 @@ export const crearDepartamento = async (req: Request, res: Response) => {
     if (!nombre) return res.status(400).json({ error: 'Nombre requerido' });
 
     const [result]: any = await pool.query(
-      'INSERT INTO departamento (nombre, descripcion) VALUES (?, ?)',
+      'INSERT INTO departamento (nombre, descripcion, creado_en) VALUES (?, ?, NOW())',
       [nombre, descripcion || null]
     );
 

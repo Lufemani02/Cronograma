@@ -3,7 +3,7 @@ import pool from '../config/db';
 
 export const obtenerDepartamentosDelLider = async (req: Request, res: Response) => {
   try {
-    const usuarioId = 1;; // viene del authMiddleware
+    const usuarioId = 1; // viene del authMiddleware
 
     const [rows] = await pool.query(`
       SELECT d.id, d.nombre, d.descripcion

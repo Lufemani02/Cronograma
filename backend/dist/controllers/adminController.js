@@ -55,7 +55,7 @@ const crearDepartamento = async (req, res) => {
         const { nombre, descripcion } = req.body;
         if (!nombre)
             return res.status(400).json({ error: 'Nombre requerido' });
-        const [result] = await db_1.default.query('INSERT INTO departamento (nombre, descripcion) VALUES (?, ?)', [nombre, descripcion || null]);
+        const [result] = await db_1.default.query('INSERT INTO departamento (nombre, descripcion, creado_en) VALUES (?, ?, NOW())', [nombre, descripcion || null]);
         res.status(201).json({ id: result.insertId, nombre, descripcion });
     }
     catch (error) {

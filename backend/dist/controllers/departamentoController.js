@@ -7,8 +7,7 @@ exports.obtenerDepartamentosDelLider = void 0;
 const db_1 = __importDefault(require("../config/db"));
 const obtenerDepartamentosDelLider = async (req, res) => {
     try {
-        const usuarioId = 1;
-        ; // viene del authMiddleware
+        const usuarioId = 1; // viene del authMiddleware
         const [rows] = await db_1.default.query(`
       SELECT d.id, d.nombre, d.descripcion
       FROM departamento d

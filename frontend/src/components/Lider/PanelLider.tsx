@@ -15,7 +15,7 @@ export default function PanelLider() {
     return;
   }
 
-  // ✅ Verifica validez del token con una llamada al backend
+  // ✅ Verifica validez del token con una llamada al backendgit add .
   const validarSesion = async () => {
     try {
   await api.get('/lider/perfil'); // Endpoint protegido para validar token

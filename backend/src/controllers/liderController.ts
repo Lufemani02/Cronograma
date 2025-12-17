@@ -9,7 +9,7 @@ export const obtenerDatosDelLider = async (req: Request, res: Response) => {
 
     // 1. Obtener departamentos del líder
     const [deptosRows] = (await pool.query(`
-      SELECT DISTINCT d.id, d.nombre, d.logo_url
+      SELECT DISTINCT d.id, d.nombre
       FROM departamento d
       INNER JOIN usuario_departamento ud ON d.id = ud.departamento_id
       WHERE ud.usuario_id = ?

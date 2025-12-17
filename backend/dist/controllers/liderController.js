@@ -12,7 +12,7 @@ const obtenerDatosDelLider = async (req, res) => {
         console.log('👤 ID del líder autenticado:', usuarioId); // fallback para pruebas
         // 1. Obtener departamentos del líder
         const [deptosRows] = (await db_1.default.query(`
-      SELECT DISTINCT d.id, d.nombre, d.logo_url
+      SELECT DISTINCT d.id, d.nombre
       FROM departamento d
       INNER JOIN usuario_departamento ud ON d.id = ud.departamento_id
       WHERE ud.usuario_id = ?

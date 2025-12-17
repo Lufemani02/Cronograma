@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import './AsignarCronograma.css';
 
-type Departamento = { id: number; nombre: string; logo_url?: string };
+type Departamento = { id: number; nombre: string };
 type Miembro = { id: number; nombre: string };
 type Tarea = { id: number; nombre: string };
 

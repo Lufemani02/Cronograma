@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AuthLayout.css';
-import api from '../../services/api';
 
 export default function LoginLider() {
   const [correo, setCorreo] = useState('');
@@ -16,7 +15,8 @@ export default function LoginLider() {
 
     // 👇 Log para verificar qué se envía
     console.log('📌 Enviando al backend:', { correo, contraseña, rol: 'lider' });
-    
+
+
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
       const response = await fetch(`${API_URL}/api/auth/login`, {
@@ -27,7 +27,7 @@ export default function LoginLider() {
         body: JSON.stringify({
           correo,
           contraseña,
-          rol: 'lider'  
+          rol: 'lider'  // ←
         }),
       });
 
@@ -53,7 +53,6 @@ export default function LoginLider() {
       console.error('❌ Error en login:', err);
     }
   };
-   
   return (
     <div className="login-background">
       <div className="login-card">

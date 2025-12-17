@@ -7,25 +7,20 @@ export default function PanelLider() {
   const navigate = useNavigate();
 
   useEffect(() => {
-  // ✅ Solo verificamos que el token exista y sea válido
-  const token = localStorage.getItem('token');
-  if (!token) {
-    alert('Sesión no encontrada. Por favor, inicia sesión.');
-    navigate('/');
-    return;
-  }
+      const validarSesion = async () => {
+        const token = localStorage.getItem('token');
+        console.log('🔍 Token en localStorage:', token); // ← añade esto
 
-  // ✅ Verifica validez del token con una llamada al backendgit add .
-  const validarSesion = async () => {
-    try {
-  await api.get('/lider/perfil'); // Endpoint protegido para validar token
-} catch (err: any) {
-}   alert('Sesión inválida. Por favor, inicia sesión de nuevo.');
-  navigate('/');
-}
-
-  validarSesion();
-}, [navigate]);
+        try {
+          const response = await api.get('/lider/perfil');
+          console.log('✅ /lider/perfil headers enviados:', response.config.headers); // ← añade esto
+        } catch (err: any) {
+          console.error('❌ Error en /lider/perfil:', err.response?.status, err.response?.data);
+          // ...
+        }
+      };
+      validarSesion();
+    }, [navigate]);
 
   // ✅ Obtiene el primer departamento y su logo_url
  const imgUrl = '/departamentos/logo.jpg'; 

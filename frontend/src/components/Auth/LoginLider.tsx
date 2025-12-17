@@ -17,22 +17,6 @@ export default function LoginLider() {
     // 👇 Log para verificar qué se envía
     console.log('📌 Enviando al backend:', { correo, contraseña, rol: 'lider' });
     
-    useEffect(() => {
-      const validarSesion = async () => {
-        const token = localStorage.getItem('token');
-        console.log('🔍 Token en localStorage:', token); // ← añade esto
-
-        try {
-          const response = await api.get('/lider/perfil');
-          console.log('✅ /lider/perfil headers enviados:', response.config.headers); // ← añade esto
-        } catch (err: any) {
-          console.error('❌ Error en /lider/perfil:', err.response?.status, err.response?.data);
-          // ...
-        }
-      };
-      validarSesion();
-    }, [navigate]);
-
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
       const response = await fetch(`${API_URL}/api/auth/login`, {
@@ -69,6 +53,7 @@ export default function LoginLider() {
       console.error('❌ Error en login:', err);
     }
   };
+   
   return (
     <div className="login-background">
       <div className="login-card">

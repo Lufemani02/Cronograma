@@ -15,17 +15,14 @@ export default function PanelLider() {
     return;
   }
 
-  // ✅ Opcional: hacer un /api/health con auth para validar token
+  // ✅ Verifica validez del token con una llamada al backend
   const validarSesion = async () => {
     try {
-      await api.get('/api/health'); // tu ruta /api/health no requiere auth, pero si quieres, crea /api/lider/perfil que sí la requiere
-    } catch (err: any) {
-      console.error('Token inválido o expirado', err);
-      alert('Sesión expirada. Por favor, inicia sesión nuevamente.');
-      localStorage.removeItem('token');
-      navigate('/');
-    }
-  };
+  await api.get('/lider/perfil'); // Endpoint protegido para validar token
+} catch (err: any) {
+}   alert('Sesión inválida. Por favor, inicia sesión de nuevo.');
+  navigate('/');
+}
 
   validarSesion();
 }, [navigate]);

@@ -8,14 +8,6 @@ dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
-const departamentoRoutes_1 = __importDefault(require("./routes/departamentoRoutes"));
-const adminRoutes_1 = __importDefault(require("./routes/adminRoutes"));
-// Rutas
-const authRoutes_1 = __importDefault(require("./routes/authRoutes"));
-const usuarioRoutes_1 = __importDefault(require("./routes/usuarioRoutes"));
-const cronogramaRoutes_1 = __importDefault(require("./routes/cronogramaRoutes"));
-const authMiddleware_1 = require("./middleware/authMiddleware");
-const liderRoutes_1 = __importDefault(require("./routes/liderRoutes"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3001;
 app.use((0, helmet_1.default)());
@@ -24,32 +16,84 @@ app.use((0, cors_1.default)({
     credentials: true
 }));
 app.use(express_1.default.json());
-// Ruta protegida: solo líderes
-app.get('/api/lider/perfil', authMiddleware_1.authMiddleware, (req, res) => {
-    res.json({ mensaje: '¡Acceso concedido!', usuarioId: req.body.usuarioId });
-});
-// Rutas
-app.use('/api/auth', authRoutes_1.default);
-app.use('/api/departamentos', departamentoRoutes_1.default);
-app.use('/api/usuarios', usuarioRoutes_1.default);
-app.use('/api/cronograma', cronogramaRoutes_1.default);
-app.use('/api/admin', adminRoutes_1.default);
-app.use('/api/lider', liderRoutes_1.default);
-// Ruta de salud para verificar que el backend está vivo
+// 
+try {
+    const authRoutes = require('./routes/authRoutes').default;
+    app.use('/api/auth', authRoutes);
+    console.log('✅ /api/auth montado');
+}
+catch (err) {
+    console.error('❌ Error al cargar authRoutes:', err?.message || err);
+}
+try {
+    const departamentoRoutes = require('./routes/departamentoRoutes').default;
+    app.use('/api/departamentos', departamentoRoutes);
+    console.log('✅ /api/departamentos montado');
+}
+catch (err) {
+    console.error('❌ Error al cargar departamentoRoutes:', err?.message || err);
+}
+try {
+    const usuarioRoutes = require('./routes/usuarioRoutes').default;
+    app.use('/api/usuarios', usuarioRoutes);
+    console.log('✅ /api/usuarios montado');
+}
+catch (err) {
+    console.error('❌ Error al cargar usuarioRoutes:', err?.message || err);
+}
+try {
+    const cronogramaRoutes = require('./routes/cronogramaRoutes').default;
+    app.use('/api/cronograma', cronogramaRoutes);
+    console.log('✅ /api/cronograma montado');
+}
+catch (err) {
+    console.error('❌ Error al cargar cronogramaRoutes:', err?.message || err);
+}
+try {
+    const adminRoutes = require('./routes/adminRoutes').default;
+    app.use('/api/admin', adminRoutes);
+    console.log('✅ /api/admin montado');
+}
+catch (err) {
+    console.error('❌ Error al cargar adminRoutes:', err?.message || err);
+}
+try {
+    const liderRoutes = require('./routes/liderRoutes').default;
+    app.use('/api/lider', liderRoutes);
+    console.log('✅ /api/lider montado');
+}
+catch (err) {
+    console.error('❌ Error al cargar liderRoutes:', err?.message || err);
+}
+// Rutas de prueba
 app.get('/api/health', (req, res) => {
     res.status(200).json({
         status: 'ok',
         time: new Date().toISOString()
     });
 });
-// Ruta raíz para Railway
 app.get('/', (req, res) => {
     res.status(200).json({
         message: 'Backend IPUC ✅',
-        time: new Date().toISOString()
+        time: new Date().toISOString(),
+        routes: [
+            '/api/health',
+            '/api/auth',
+            '/api/departamentos',
+            '/api/usuarios',
+            '/api/cronograma',
+            '/api/admin',
+            '/api/lider'
+        ]
     });
 });
+// Manejador final de errores (debug)
+app.use((err, req, res, next) => {
+    console.error('💥 Error no capturado:', err.stack);
+    res.status(500).json({ error: 'Error interno del servidor' });
+});
 app.listen(PORT, () => {
-    console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
+    console.log(`✅ Backend corriendo en puerto ${PORT}`);
+    console.log(`🚀 Entorno: ${process.env.NODE_ENV || 'development'}`);
 });
 //# sourceMappingURL=server.js.map

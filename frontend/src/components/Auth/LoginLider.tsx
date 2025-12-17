@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AuthLayout.css';
+import api from '../../services/api';
 
 export default function LoginLider() {
   const [correo, setCorreo] = useState('');
@@ -15,7 +16,22 @@ export default function LoginLider() {
 
     // 👇 Log para verificar qué se envía
     console.log('📌 Enviando al backend:', { correo, contraseña, rol: 'lider' });
+    
+    useEffect(() => {
+      const validarSesion = async () => {
+        const token = localStorage.getItem('token');
+        console.log('🔍 Token en localStorage:', token); // ← añade esto
 
+        try {
+          const response = await api.get('/lider/perfil');
+          console.log('✅ /lider/perfil headers enviados:', response.config.headers); // ← añade esto
+        } catch (err: any) {
+          console.error('❌ Error en /lider/perfil:', err.response?.status, err.response?.data);
+          // ...
+        }
+      };
+      validarSesion();
+    }, [navigate]);
 
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
